@@ -1,0 +1,10 @@
+{
+  "type":"object",
+  "$id":"schema:auth:user",
+  "addiontionalProperties":false,
+  "properties": {
+    "name": {
+      "name": "string"
+    }
+  }
+}

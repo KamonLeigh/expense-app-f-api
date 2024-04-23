@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  userId   String    @unique @default(uuid())
+  email    String    @unique
+  name     String
+  hash     String
+  salt     String
+  expenses Expense[]
+  list     List[]
+}
+
+model Expense {
+  id         Int      @id @default(autoincrement())
+  expense    String   @unique @default(uuid())
+  note       String
+  description String?
+  amount     Float
+  type       Type     @default(BILL)
+  author     User     @relation(fields: [authorId], references: [userId])
+  authorId   String
+  completed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
+  parent     List?    @relation(fields: [parentId], references: [listId])
+  parentId   String?
+}
+
+model List {
+  id        Int       @id @default(autoincrement())
+  listId    String    @unique @default(uuid())
+  name      String
+  author    User      @relation(fields: [authorId], references: [userId])
+  authorId  String
+  expenses  Expense[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+enum Type {
+  FOOD
+  WORK
+  HOME
+  HOBBY
+  LEISURE
+  BILL
+  OTHER
+}

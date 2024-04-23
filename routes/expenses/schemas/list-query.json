@@ -1,0 +1,8 @@
+{
+  "type": "object",
+  "$id": "schema:expense:list:query",
+  "additionalProperties": false,
+  "properties": {
+    "limit": {}
+  }
+}
