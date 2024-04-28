@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "$id":"schema:list",
+  "additionalProperties": false,
+  "properties": {
+    "iistId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

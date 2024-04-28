@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "$id":"schema:auth:reset",
+  "additionalProperties": false,
+  "properties": {
+    "email": {
+      "type":"string"
+    }
+  }
+}

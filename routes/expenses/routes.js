@@ -6,9 +6,10 @@ module.exports = fp(
   async function (fastify, _opts) {
     fastify.route({
       method: 'GET',
-      url: '/',
+      url: '/:id',
       handler: async function listExpense (request, reply) {
-        return request.expensesDataSource.listExpense()
+        const listId = request.params.id
+        return request.expensesDataSource.listExpense(listId)
       }
     })
   },

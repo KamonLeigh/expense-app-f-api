@@ -17,7 +17,7 @@
     "db:stop": "docker container stop fastify-postgres"
   },
   "prisma": {
-     "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.js"
   },
   "keywords": [],
   "author": "",
@@ -31,13 +31,13 @@
     "@fastify/sensible": "^5.0.0",
     "@fastify/swagger": "^8.11.0",
     "@joggr/fastify-prisma": "^1.2.3",
-    "@prisma/client": "^5.12.1",
+    "@prisma/client": "^5.13.0",
     "fastify": "^4.0.0",
     "fastify-cli": "^5.8.0",
     "fastify-plugin": "^4.0.0"
   },
   "devDependencies": {
-    "prisma": "^5.12.1",
+    "prisma": "^5.13.0",
     "standard": "^17.1.0",
     "tap": "^16.1.0"
   }

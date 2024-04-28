@@ -10,8 +10,12 @@ module.exports = fp(
 
     fastify.addHook('onRequest', async (request, reply) => {
       request.expensesDataSource = {
-        async listExpense () {
-          const listExpenses = await expenses.findMany()
+        async listExpense (id) {
+          const listExpenses = await expenses.findMany({
+            where: {
+              parentId: id
+            }
+          })
           return listExpenses
         },
         async foo () {

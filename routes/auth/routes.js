@@ -119,6 +119,49 @@ module.exports = fp(
         return request.user
       }
     })
+
+    fastify.route({
+      method: 'POST',
+      url: '/reset',
+      schema: {
+        body: fastify.getSchema('schema:auth:reset')
+      },
+      handler: async function resetPassword (request, reply) {
+        const result = await request.usersDataSource.updatePassword(request.body.email)
+
+        if (!result) {
+          const err = new Error('Wrong credentials provider')
+          err.statusCode = 401
+          throw err
+        }
+
+        reply.code(200)
+
+        return { result: true }
+      }
+    })
+
+    fastify.route({
+      method: 'POST',
+      url: '/password/:token',
+      schema: {
+        body: fastify.getSchema('schema:auth:password')
+      },
+      handler: async function changePassword (request, reply) {
+        const { salt, hash } = await generateHash(request.body.password, user.salt)
+
+        const { user, token } = await request.usersDataSource(request.params.token, salt, hash)
+
+        if (!token || !user) {
+          const err = new Error('Error processing')
+          err.statusCode = 403
+          throw err
+        }
+
+        reply.code(200)
+        return { user: user.userId }
+      }
+    })
   },
   {
     name: 'users-routes',
@@ -127,4 +170,4 @@ module.exports = fp(
   }
 )
 
-//module.exports.prefixOverride = ''
+// module.exports.prefixOverride = ''
