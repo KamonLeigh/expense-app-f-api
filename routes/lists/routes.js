@@ -16,7 +16,15 @@ module.exports = fp(
     fastify.route({
       method: 'POST',
       url: '/',
+      schema: {
+        body: fastify.getSchema("schema:list:create:body")
+      },
       handler: async function createList (request, reply) {
+        if(!request.body.name) {
+          const err = new Error('Wrong credentials provider')
+          err.statusCode = 400
+          throw err
+        }
         const insertId = await request.listsDataSource.createList(request.body)
         reply.status(201)
         return { id: insertId }
@@ -24,11 +32,26 @@ module.exports = fp(
     })
 
     fastify.route({
-      method: 'POST',
+      method: 'PUT',
       url: '/:id',
+      schema: {
+        body: fastify.getSchema("schema:list:create:body"),
+        params: fastify.getSchema("schema:list:read:params")
+      },
       handler: async function updateListName (request, reply) {
-        // const title = request.body.name
-        // const id = request.params.id
+        const id = request.params.id
+        const name = request.body.name
+        if (!id || !name){
+          const err = new Error('Wrong credentials provider')
+          err.statusCode = 400
+          throw err
+        }
+        const list = await request.listsDataSource.updateList(id, request.body.name)
+        if(!list) {
+          reply.code(404)
+          return { error: 'List not found'}
+        }
+        reply.code(204)
       }
     })
   },

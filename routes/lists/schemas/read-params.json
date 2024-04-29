@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "$id":"schema:list:read:params",
+  "required": ["id"],
+  "addtionalProperties": false,
+  "properties": {
+    "id":{
+      "type":"string"
+    }
+  }
+}

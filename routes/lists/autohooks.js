@@ -12,13 +12,13 @@ module.exports = fp(
       request.listsDataSource = {
 
         async listLists (skip = 0, take = 50) {
-          console.log(request.user)
           const authorId = request.user.userId
           const results = await lists.findMany({
             skip,
             take,
             where: {
-              authorId
+              authorId,
+              deletedAt: null
             }
           })
           return results
@@ -29,6 +29,20 @@ module.exports = fp(
             data: {
               ...request.body,
               authorId
+            }
+          })
+
+          return result
+        },
+        async updateList(listId){
+          const result = await lists.update({
+            where: {
+              authorId: request.user.id,
+              deletedAt: null,
+              listId
+            },
+            data: {
+              name: request.body.name
             }
           })
 

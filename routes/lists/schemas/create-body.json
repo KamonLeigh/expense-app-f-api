@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "$id": "schema:list:create:body",
+  "required": ["name"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    }
+  }
+}
