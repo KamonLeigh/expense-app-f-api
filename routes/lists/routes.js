@@ -46,12 +46,31 @@ module.exports = fp(
           err.statusCode = 400
           throw err
         }
-        const list = await request.listsDataSource.updateList(id, request.body.name)
-        if(!list) {
-          reply.code(404)
-          return { error: 'List not found'}
-        }
+        await request.listsDataSource.updateList(id, request.body.name)
+
         reply.code(204)
+      }
+    })
+
+    fastify.route({
+      method: 'DELETE',
+      url: '/:id',
+      schema: {
+        params:fastify.getSchema('schema:list:read:params'),
+      },
+      handler: async function deleteList(request, reply) {
+        const id = request.params.id
+
+        if(!id){
+          const err = new Error('Wrong credentials provider')
+          err.statusCode = 400
+          throw err
+        }
+
+        await request.listsDataSource.deleteList(id)
+        reply.code(200)
+
+
       }
     })
   },

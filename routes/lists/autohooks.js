@@ -1,5 +1,6 @@
 'use strict'
 const fp = require('fastify-plugin')
+const { Prisma } = require('@prisma/client')
 
 module.exports = fp(
   async function listAutoHooks (fastify, _opts) {
@@ -25,6 +26,7 @@ module.exports = fp(
         },
         async createList () {
           const authorId = request.user.id
+          try {
           const result = await lists.create({
             data: {
               ...request.body,
@@ -33,8 +35,19 @@ module.exports = fp(
           })
 
           return result
+          } catch(e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError){
+              e.statusCode = 400
+              delete e.code
+              e.message = 'List not created'
+              throw e
+            }
+            throw e
+          }
         },
         async updateList(listId){
+
+          try {
           const result = await lists.update({
             where: {
               authorId: request.user.id,
@@ -45,8 +58,38 @@ module.exports = fp(
               name: request.body.name
             }
           })
-
           return result
+          } catch(e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError){
+              e.statusCode = 400
+              delete e.code
+              e.message = 'List not found'
+              throw e
+            }
+            throw e
+          }
+        },
+        async deleteList(listId){
+
+          try {
+          await lists.update({
+            where: {
+              authorId: request.user.id,
+              listId
+            },
+            data: {
+              deletedAt: new Date().toISOString()
+            }
+          })
+          } catch(e){
+            if (e instanceof Prisma.PrismaClientKnownRequestError){
+              e.statusCode = 400
+              delete e.code
+              e.message = 'List not deleted'
+              throw e
+            }
+            throw e
+          }
         }
       }
     })
