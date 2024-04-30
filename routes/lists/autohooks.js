@@ -6,6 +6,13 @@ module.exports = fp(
   async function listAutoHooks (fastify, _opts) {
     const lists = fastify.prisma.list
 
+    const select = {
+      listId: true,
+      name: true,
+      createdAt: true,
+      updatedAt: true
+    }
+
     // fastify.decorate("lists", lists);
     fastify.decorateRequest('listsDataSource', null)
 
@@ -20,23 +27,25 @@ module.exports = fp(
             where: {
               authorId,
               deletedAt: null
-            }
+            },
+            select
           })
           return results
         },
         async createList () {
           const authorId = request.user.id
           try {
-          const result = await lists.create({
-            data: {
-              ...request.body,
-              authorId
-            }
-          })
+            const result = await lists.create({
+              data: {
+                ...request.body,
+                authorId
+              },
+              select
+            })
 
-          return result
-          } catch(e) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError){
+            return result
+          } catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError) {
               e.statusCode = 400
               delete e.code
               e.message = 'List not created'
@@ -45,22 +54,22 @@ module.exports = fp(
             throw e
           }
         },
-        async updateList(listId){
-
+        async updateList (listId) {
           try {
-          const result = await lists.update({
-            where: {
-              authorId: request.user.id,
-              deletedAt: null,
-              listId
-            },
-            data: {
-              name: request.body.name
-            }
-          })
-          return result
-          } catch(e) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError){
+            const result = await lists.update({
+              where: {
+                authorId: request.user.id,
+                deletedAt: null,
+                listId
+              },
+              data: {
+                name: request.body.name
+              },
+              select
+            })
+            return result
+          } catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError) {
               e.statusCode = 400
               delete e.code
               e.message = 'List not found'
@@ -69,20 +78,19 @@ module.exports = fp(
             throw e
           }
         },
-        async deleteList(listId){
-
+        async deleteList (listId) {
           try {
-          await lists.update({
-            where: {
-              authorId: request.user.id,
-              listId
-            },
-            data: {
-              deletedAt: new Date().toISOString()
-            }
-          })
-          } catch(e){
-            if (e instanceof Prisma.PrismaClientKnownRequestError){
+            await lists.update({
+              where: {
+                authorId: request.user.id,
+                listId
+              },
+              data: {
+                deletedAt: new Date().toISOString()
+              }
+            })
+          } catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError) {
               e.statusCode = 400
               delete e.code
               e.message = 'List not deleted'

@@ -17,10 +17,10 @@ module.exports = fp(
       method: 'POST',
       url: '/',
       schema: {
-        body: fastify.getSchema("schema:list:create:body")
+        body: fastify.getSchema('schema:list:create:body')
       },
       handler: async function createList (request, reply) {
-        if(!request.body.name) {
+        if (!request.body.name) {
           const err = new Error('Wrong credentials provider')
           err.statusCode = 400
           throw err
@@ -35,13 +35,13 @@ module.exports = fp(
       method: 'PUT',
       url: '/:id',
       schema: {
-        body: fastify.getSchema("schema:list:create:body"),
-        params: fastify.getSchema("schema:list:read:params")
+        body: fastify.getSchema('schema:list:create:body'),
+        params: fastify.getSchema('schema:list:read:params')
       },
       handler: async function updateListName (request, reply) {
         const id = request.params.id
         const name = request.body.name
-        if (!id || !name){
+        if (!id || !name) {
           const err = new Error('Wrong credentials provider')
           err.statusCode = 400
           throw err
@@ -56,12 +56,12 @@ module.exports = fp(
       method: 'DELETE',
       url: '/:id',
       schema: {
-        params:fastify.getSchema('schema:list:read:params'),
+        params: fastify.getSchema('schema:list:read:params')
       },
-      handler: async function deleteList(request, reply) {
+      handler: async function deleteList (request, reply) {
         const id = request.params.id
 
-        if(!id){
+        if (!id) {
           const err = new Error('Wrong credentials provider')
           err.statusCode = 400
           throw err
@@ -69,8 +69,6 @@ module.exports = fp(
 
         await request.listsDataSource.deleteList(id)
         reply.code(200)
-
-
       }
     })
   },
