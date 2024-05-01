@@ -71,6 +71,20 @@ module.exports = fp(
         reply.code(200)
       }
     })
+
+    fastify.route({
+      method: 'GET',
+      url: '/:id',
+      schema: {
+        params: fastify.getSchema('schema:list:read:params')
+      },
+      handler: async function getList (request, reply) {
+        const id = request.params.id
+        const result = await request.listsDataSource.getList(id)
+        reply.code(200)
+        return result ?? []
+      }
+    })
   },
   {
     name: 'lists-routes',

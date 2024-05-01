@@ -98,6 +98,44 @@ module.exports = fp(
             }
             throw e
           }
+        },
+        async getList(id){
+          try {
+            const data = await lists.findFirst({
+              where: {
+                deletedAt: null,
+                listId: id,
+                authorId: request.user.id
+              },
+              include:{
+                expenses:{
+                  select:{
+                    expense: true,
+                    note: true,
+                    description: true,
+                    amount: true,
+                    authorId: true,
+                    completed: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    parentId: true
+                  },
+                  where: {
+                    deletedAt: null
+                  }
+                }
+              }
+            })
+            return data
+          } catch(e) {
+            if(e instanceof Prisma.PrismaClientKnownRequestError) {
+              e.statusCode = 400
+              delete e.code
+              e.message = 'List data not found'
+              throw e
+            }
+            throw e
+          }
         }
       }
     })
