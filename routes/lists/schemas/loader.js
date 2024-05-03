@@ -6,4 +6,5 @@ module.exports = fp(async function schemaLoaderPlugin (fastify, opts) {
   fastify.addSchema(require('./list.json'))
   fastify.addSchema(require('./create-body.json'))
   fastify.addSchema(require('./read-params.json'))
+  fastify.addSchema(require('./list-expense.json'))
 })

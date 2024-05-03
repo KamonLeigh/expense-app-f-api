@@ -99,7 +99,7 @@ module.exports = fp(
             throw e
           }
         },
-        async getList(id){
+        async getList(id) {
           try {
             const data = await lists.findFirst({
               where: {
@@ -107,9 +107,12 @@ module.exports = fp(
                 listId: id,
                 authorId: request.user.id
               },
-              include:{
-                expenses:{
-                  select:{
+              select: {
+                listId: true,
+                authorId: true,
+                updatedAt: true,
+                expenses: {
+                  select: {
                     expense: true,
                     note: true,
                     description: true,
@@ -126,9 +129,10 @@ module.exports = fp(
                 }
               }
             })
+
             return data
-          } catch(e) {
-            if(e instanceof Prisma.PrismaClientKnownRequestError) {
+          } catch (e) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError) {
               e.statusCode = 400
               delete e.code
               e.message = 'List data not found'

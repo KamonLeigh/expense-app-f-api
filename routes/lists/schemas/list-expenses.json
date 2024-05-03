@@ -1,0 +1,37 @@
+{
+  "type":"object",
+  "$id":"schema:expense:list:expenses",
+  "addtionalProperties": false,
+  "properties": {
+        "id": {
+          "type": "string"
+        },
+        "listId": {
+          "type":"string"
+        },
+        "name":{
+          "type": "string"
+        },
+        "authorId": {
+          "type":"string"
+        },
+        "createdAt":{
+          "type":"string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type":"string",
+          "format": "date-time"
+        },
+        "deletedAt":{
+          "type": "string",
+          "format": "date-time"
+        },
+        "expenses":{
+          "type":"array",
+          "items": {
+            "$ref": "schema:list"
+          }
+        }
+  }
+}
