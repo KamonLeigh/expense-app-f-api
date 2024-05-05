@@ -18,7 +18,6 @@ module.exports = fp(
 
     fastify.addHook('onRequest', async (request, reply) => {
       request.listsDataSource = {
-
         async listLists (skip = 0, take = 50) {
           const authorId = request.user.userId
           const results = await lists.findMany({
@@ -31,6 +30,16 @@ module.exports = fp(
             select
           })
           return results
+        },
+        async expenseCountList (parentId) {
+          const expenseCount = await fastify.prisma.expense.count({
+            where: {
+              deletedAt: null,
+              parentId
+            }
+          })
+
+          return expenseCount
         },
         async createList () {
           const authorId = request.user.id
@@ -99,7 +108,7 @@ module.exports = fp(
             throw e
           }
         },
-        async getList(id) {
+        async getList (id) {
           try {
             const data = await lists.findFirst({
               where: {

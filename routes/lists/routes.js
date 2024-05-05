@@ -35,8 +35,8 @@ module.exports = fp(
       method: 'PUT',
       url: '/:id',
       schema: {
-        body: fastify.getSchema('schema:list:create:body'),
-        params: fastify.getSchema('schema:list:read:params')
+        params: fastify.getSchema('schema:list:read:params'),
+        body: fastify.getSchema('schema:list:create:body')
       },
       handler: async function updateListName (request, reply) {
         const id = request.params.id
@@ -76,13 +76,17 @@ module.exports = fp(
       method: 'GET',
       url: '/:id',
       schema: {
-        params: fastify.getSchema('schema:list:read:params')
+        params: fastify.getSchema('"schema:list:read:params')
       },
       handler: async function getList (request, reply) {
         const id = request.params.id
-        const result = await request.listsDataSource.getList(id)
+        const data = await request.listsDataSource.getList(id) ?? []
+        const count = await request.listsDataSource.expenseCountList(id) ?? 0
         reply.code(200)
-        return result ?? []
+        return {
+          data,
+          count
+        }
       }
     })
   },
