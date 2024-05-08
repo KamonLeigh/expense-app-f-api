@@ -145,6 +145,7 @@ module.exports = fp(
       method: 'POST',
       url: '/password/:token',
       schema: {
+        params: fastify.getSchema('schema:auth:token'),
         body: fastify.getSchema('schema:auth:password')
       },
       handler: async function changePassword (request, reply) {

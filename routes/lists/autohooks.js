@@ -1,9 +1,11 @@
 'use strict'
 const fp = require('fastify-plugin')
 const { Prisma } = require('@prisma/client')
+const schemas = require('./schemas/loader')
 
 module.exports = fp(
   async function listAutoHooks (fastify, _opts) {
+    fastify.register(schemas)
     const lists = fastify.prisma.list
 
     const select = {

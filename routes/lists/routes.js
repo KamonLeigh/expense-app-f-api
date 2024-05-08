@@ -2,6 +2,7 @@ const fp = require('fastify-plugin')
 
 module.exports = fp(
   async function (fastify, _opts) {
+
     fastify.addHook('onRequest', fastify.authenticate)
     fastify.route({
       method: 'GET',
@@ -17,7 +18,10 @@ module.exports = fp(
       method: 'POST',
       url: '/',
       schema: {
-        body: fastify.getSchema('schema:list:create:body')
+        body: fastify.getSchema('schema:list:create:body'),
+        response: {
+          201: fastify.getSchema('schema:list:create:response')
+        }
       },
       handler: async function createList (request, reply) {
         if (!request.body.name) {
@@ -76,7 +80,7 @@ module.exports = fp(
       method: 'GET',
       url: '/:id',
       schema: {
-        params: fastify.getSchema('"schema:list:read:params')
+        params: fastify.getSchema('schema:list:read:params')
       },
       handler: async function getList (request, reply) {
         const id = request.params.id

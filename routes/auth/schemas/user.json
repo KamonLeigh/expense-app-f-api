@@ -4,7 +4,7 @@
   "addiontionalProperties":false,
   "properties": {
     "name": {
-      "name": "string"
+      "type": "string"
     }
   }
 }
