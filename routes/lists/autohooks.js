@@ -21,7 +21,7 @@ module.exports = fp(
     fastify.addHook('onRequest', async (request, reply) => {
       request.listsDataSource = {
         async listLists (skip = 0, take = 50) {
-          const authorId = request.user.userId
+          const authorId = request.user.id
           const results = await lists.findMany({
             skip,
             take,

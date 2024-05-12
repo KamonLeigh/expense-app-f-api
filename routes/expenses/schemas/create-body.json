@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "$id": "schema:expense:create:body",
+  "required": ["note"],
+  "additionalProperties": false,
+  "properties": {
+    "note": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number",
+      "multipleOf" : 0.01,
+      "minimum": 0
+    },
+    "completed": {
+     "type": "boolean"
+    }
+  }
+}

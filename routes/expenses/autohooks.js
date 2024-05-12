@@ -1,9 +1,11 @@
 'use strict'
 const fp = require('fastify-plugin')
 const { Prisma } = require('@prisma/client')
+const schemas = require('./schemas/loader')
 
 module.exports = fp(
   async function expenseAutoHooks (fastify, _opts) {
+    fastify.register(schemas)
     const expenses = fastify.prisma.expense
 
     // fastify.decorate("expenses", expenses);
@@ -11,27 +13,27 @@ module.exports = fp(
 
     fastify.addHook('onRequest', async (request, reply) => {
       request.expensesDataSource = {
-        async listExpense (id) {
-          const listExpense = await expenses.findMany({
+        async getExpense (id) {
+          const expense = await expenses.findFirst({
             where: {
               expense: id,
               deletedAt: null,
               authorId: request.user.id
             }
           })
-          return listExpense
+          return expense
         },
         async foo () {
           return 'this is an example also'
         },
-        async updateExpense (id, expense) {
+        async updateExpense (id, userId, expense) {
           const result = await expenses.update({
             where: {
               expense: id,
               authorId: request.user.id
             },
             data: {
-              ...expense.body
+              ...expense
             }
           })
           return result
@@ -72,6 +74,28 @@ module.exports = fp(
 
             throw e
           }
+        },
+        async createExpense (parentId, body) {
+          const expense = await expenses.create({
+            data: {
+              authorId: request.user.id,
+              parentId,
+              ...body
+            }
+          })
+
+          return expense
+        },
+        async getAllExpense (id) {
+          const result = await expenses.findMany({
+            where: {
+              parentId: id,
+              authorId: request.user.id,
+              deleteAt: null
+            }
+          })
+
+          return result
         }
       }
     })

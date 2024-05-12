@@ -32,7 +32,7 @@ model Expense {
   expense    String   @unique @default(uuid())
   note       String
   description String?
-  amount     Float
+  amount     Float    @default(0.00)
   type       Type     @default(BILL)
   author     User     @relation(fields: [authorId], references: [userId])
   authorId   String

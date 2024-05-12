@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "$id": "schema:expense",
+  "addtionalProperties": false,
+  "properties": {
+    "expense": {
+      "type": "string"
+    },
+    "authorId": {
+      "type": "string"
+    },
+    "parentId": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number",
+      "multipleOf" : 0.01,
+      "minimum": 0
+    },
+    "completed": {
+     "type": "boolean"
+    },
+    "createdAt": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "updatetAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

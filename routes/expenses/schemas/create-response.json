@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "$id": "schema:expense:create:body",
+  "required": ["id"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string"
+    }
+  }
+}

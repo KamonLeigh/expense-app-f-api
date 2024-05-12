@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "$id": "schema:expense:query",
+  "additionalProperties": false,
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "schema:expense"
+      }
+    }
+  }
+}

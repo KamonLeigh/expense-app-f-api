@@ -2,7 +2,6 @@ const fp = require('fastify-plugin')
 
 module.exports = fp(
   async function (fastify, _opts) {
-
     fastify.addHook('onRequest', fastify.authenticate)
     fastify.route({
       method: 'GET',
