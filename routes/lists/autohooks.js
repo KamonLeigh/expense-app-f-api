@@ -33,6 +33,15 @@ module.exports = fp(
           })
           return results
         },
+        async expenseTotal() {
+          const expenseTotal = await fastify.prisma.expense.aggregate({
+           _sum: {
+           amount: true,
+           },
+          })
+          return expenseTotal
+
+        },
         async expenseCountList (parentId) {
           const expenseCount = await fastify.prisma.expense.count({
             where: {
@@ -110,7 +119,7 @@ module.exports = fp(
             throw e
           }
         },
-        async getList (id) {
+        async getList (id, skip = 0, take = 15) {
           try {
             const data = await lists.findFirst({
               where: {
@@ -134,8 +143,10 @@ module.exports = fp(
                     updatedAt: true,
                     parentId: true
                   },
+                  skip,
+                  take,
                   where: {
-                    deletedAt: null
+                    deletedAt: null,
                   }
                 }
               }

@@ -86,8 +86,10 @@ module.exports = fp(
 
           return expense
         },
-        async getAllExpense (id) {
+        async getAllExpense (id, skip = 0, take = 10) {
           const result = await expenses.findMany({
+            skip,
+            take,
             where: {
               parentId: id,
               authorId: request.user.id,

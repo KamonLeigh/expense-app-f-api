@@ -83,12 +83,30 @@ module.exports = fp(
       },
       handler: async function getList (request, reply) {
         const id = request.params.id
-        const data = await request.listsDataSource.getList(id) ?? []
+        const { skip, take } = request.query
+        const data = await request.listsDataSource.getList(id, skip, take) ?? []
         const count = await request.listsDataSource.expenseCountList(id) ?? 0
+        const total = await request.listaDataSource.expenseTotal(id) ?? 0
         reply.code(200)
         return {
           data,
-          count
+          count,
+          total
+        }
+      }
+    })
+
+    fastify.route({
+      method: 'GET',
+      url: '/:id/total',
+      schema: {
+        params: fastify.getSchema('schema:list:read:params')
+      },
+      handler: async function expenseTotal(request, reply) {
+        const total = await request.listaDataSource.expenseTotal(id) ?? 0
+        reply.code(200)
+        return {
+          total
         }
       }
     })
