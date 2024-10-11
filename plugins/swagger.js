@@ -12,7 +12,7 @@ module.exports = fp(async function (fastify, opts) {
   })
 
   fastify.register(require('@fastify/swagger-ui'), {
-    routePrefix: '/doc',
+    routePrefix: '/docs',
   })
 
 

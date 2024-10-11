@@ -8,6 +8,8 @@ module.exports = fp(
     fastify.route({
       method: 'POST',
       schema: {
+        description:"Register new user.",
+        tags: ['user'],
         body: fastify.getSchema('schema:auth:register')
       },
       url: '/register',
@@ -48,6 +50,8 @@ module.exports = fp(
       method: 'POST',
       url: '/authenticate',
       schema: {
+        tags: ['user'],
+        description: "Authenticate user.",
         body: fastify.getSchema('schema:auth:authenticate'),
         response: {
           200: fastify.getSchema('schema:auth:token')
@@ -85,6 +89,10 @@ module.exports = fp(
     fastify.route({
       method: 'POST',
       url: '/logout',
+      schema: {
+        description: "Logout current user.",
+        tags: ['user']
+      },
       onRequest: fastify.authenticate,
       handler: async function logoutHandler (request, reply) {
         request.revokeToken()
@@ -97,6 +105,7 @@ module.exports = fp(
       url: 'refresh',
       onRequest: fastify.authenticate,
       schema: {
+        description: "Refresh token.",
         headers: fastify.getSchema('schema:auth:token-header'),
         response: {
           200: fastify.getSchema('schema:auth:token')
@@ -110,6 +119,8 @@ module.exports = fp(
       url: '/me',
       onRequest: fastify.authenticate,
       schema: {
+        description: "Get current logged in user.",
+        tags: ['user'],
         headers: fastify.getSchema('schema:auth:token-header'),
         response: {
           200: fastify.getSchema('schema:auth:user')
@@ -124,6 +135,8 @@ module.exports = fp(
       method: 'POST',
       url: '/reset',
       schema: {
+        description: "Request password reset",
+        tags: ['user'],
         body: fastify.getSchema('schema:auth:reset')
       },
       handler: async function resetPassword (request, reply) {
@@ -145,6 +158,8 @@ module.exports = fp(
       method: 'POST',
       url: '/password/:token',
       schema: {
+        description: "Reset password",
+        tags: ['user'],
         params: fastify.getSchema('schema:auth:token'),
         body: fastify.getSchema('schema:auth:password')
       },
