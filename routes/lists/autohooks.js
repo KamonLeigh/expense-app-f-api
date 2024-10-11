@@ -33,11 +33,14 @@ module.exports = fp(
           })
           return results
         },
-        async expenseTotal() {
+        async expenseTotal(id) {
           const expenseTotal = await fastify.prisma.expense.aggregate({
            _sum: {
            amount: true,
            },
+           where: {
+             parentId: id
+           }
           })
           return expenseTotal
 
@@ -63,7 +66,7 @@ module.exports = fp(
               select
             })
 
-            return result
+            return result.listId
           } catch (e) {
             if (e instanceof Prisma.PrismaClientKnownRequestError) {
               e.statusCode = 400

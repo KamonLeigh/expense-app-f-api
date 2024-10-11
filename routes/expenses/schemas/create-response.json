@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "$id": "schema:expense:create:body",
+  "$id": "schema:expense:create:response",
   "required": ["id"],
   "additionalProperties": false,
   "properties": {

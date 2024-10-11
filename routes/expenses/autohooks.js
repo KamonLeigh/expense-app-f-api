@@ -8,6 +8,19 @@ module.exports = fp(
     fastify.register(schemas)
     const expenses = fastify.prisma.expense
 
+    const select = {
+          expense: true,
+          note: true,
+          description: true,
+          amount: true,
+          type: true,
+          authorId: true,
+          completed: true,
+          createdAt: true,
+          updatedAt: true,
+          parentId: true
+    }
+
     // fastify.decorate("expenses", expenses);
     fastify.decorateRequest('expensesDataSource', null)
 
@@ -21,6 +34,7 @@ module.exports = fp(
               authorId: request.user.id
             }
           })
+
           return expense
         },
         async foo () {
@@ -52,6 +66,7 @@ module.exports = fp(
           return result
         },
         async deleteExpense (id) {
+
           try {
             const result = await expenses.update({
               where: {
@@ -65,7 +80,7 @@ module.exports = fp(
 
             return result
           } catch (e) {
-            if (e instanceof Prisma.PrismaClientKnownRequest) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError) {
               e.statusCode = 400
               delete e.code
               e.message = 'Expense not deleted'
@@ -93,8 +108,9 @@ module.exports = fp(
             where: {
               parentId: id,
               authorId: request.user.id,
-              deleteAt: null
-            }
+              deletedAt: null
+            },
+            select
           })
 
           return result

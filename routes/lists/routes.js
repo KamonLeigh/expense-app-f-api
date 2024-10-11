@@ -71,7 +71,8 @@ module.exports = fp(
         }
 
         await request.listsDataSource.deleteList(id)
-        reply.code(200)
+        reply.code(204)
+        return { done: true}
       }
     })
 
@@ -86,7 +87,7 @@ module.exports = fp(
         const { skip, take } = request.query
         const data = await request.listsDataSource.getList(id, skip, take) ?? []
         const count = await request.listsDataSource.expenseCountList(id) ?? 0
-        const total = await request.listaDataSource.expenseTotal(id) ?? 0
+        const total = await request.listsDataSource.expenseTotal(id) ?? 0
         reply.code(200)
         return {
           data,
@@ -103,7 +104,8 @@ module.exports = fp(
         params: fastify.getSchema('schema:list:read:params')
       },
       handler: async function expenseTotal(request, reply) {
-        const total = await request.listaDataSource.expenseTotal(id) ?? 0
+        const id = request.params.id
+        const total = await request.listsDataSource.expenseTotal(id) ?? 0
         reply.code(200)
         return {
           total

@@ -9,13 +9,21 @@ module.exports = fp(
       url: '/:id',
       schema: {
         params: fastify.getSchema('schema:expense:read:params'),
-        body: {
+        response: {
           200: fastify.getSchema('schema:expense')
         }
       },
       handler: async function getExpense (request, reply) {
-        const listId = request.params.id
-        return request.expensesDataSource.getExpense(listId)
+        const expenseId = request.params.id
+        const expense = await request.expensesDataSource.getExpense(expenseId)
+
+        if (!expense) {
+          reply.code(404)
+          return { message : "expense not found"}
+        }
+
+        reply.code(200)
+        return expense
       }
     })
 
@@ -30,11 +38,11 @@ module.exports = fp(
       },
       handler: async function createExpense (request, reply) {
         const parentId = request.params.parentId
-        const expense = await request.expenseDataSource(parentId, request.body)
+        const expense = await request.expensesDataSource.createExpense(parentId, request.body)
 
         reply.status(201)
 
-        return { id: expense }
+        return { id: expense.expense }
       }
     })
 
@@ -48,7 +56,7 @@ module.exports = fp(
         const id = request.params.id
         const userId = request.user.id
 
-        await request.expenseDataSource.updateExpense(id, userId, request.body)
+        await request.expensesDataSource.updateExpense(id, userId, request.body)
 
         reply.code(204)
       }
@@ -63,8 +71,10 @@ module.exports = fp(
       handler: async function deleteExpense (request, reply) {
         const id = request.params.id
 
-        await request.expenseDataSource.deleteExpense(id)
+
+        await request.expensesDataSource.deleteExpense(id)
         reply.code(204)
+        return { done: true }
       }
     })
 
@@ -76,7 +86,7 @@ module.exports = fp(
       },
       handler: async function completeExpense (request, reply) {
         const id = request.params.id
-        const expense = await request.expensesDataSource.listExpense(id)
+        const expense = await request.expensesDataSource.getExpense(id)
 
         if (!expense) {
           reply.code(404)
@@ -84,6 +94,8 @@ module.exports = fp(
         }
 
         await request.expensesDataSource.completeExpense(id, !expense.completed)
+
+        return { done: true }
       }
     })
 
@@ -91,12 +103,12 @@ module.exports = fp(
       method: 'GET',
       url: ':id/all',
       schema: {
-        params: fastify.getSchema('schema:expense:create:body'),
+        params: fastify.getSchema('schema:expense:read:params'),
       },
       handler: async function getAllExpense (request, reply) {
         const id = request.params.id
         const { skip, take } = request.query
-        const data = await request.expenseDataSource.getAllExpense(id, skip, take)
+        const data = await request.expensesDataSource.getAllExpense(id, skip, take)
 
         return data ?? []
       }
