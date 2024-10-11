@@ -1,4 +1,5 @@
 const fp = require('fastify-plugin')
+
 module.exports = fp(async function (fastify, opts) {
   fastify.register(require('@fastify/swagger'), {
     routePrefix: '/docs',
@@ -9,4 +10,10 @@ module.exports = fp(async function (fastify, opts) {
       version: require('../package.json').version
     }
   })
+
+  fastify.register(require('@fastify/swagger-ui'), {
+    routePrefix: '/docs',
+  })
+
+
 }, { dependencies: ['application-config'] })

@@ -11,7 +11,7 @@
             "type": "integer",
             "default": 3000
         },
-        "MONGO_URL": {
+        "DATABASE_URL": {
             "type": "string"
         }
     }

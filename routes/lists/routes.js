@@ -5,6 +5,10 @@ module.exports = fp(
     fastify.addHook('onRequest', fastify.authenticate)
     fastify.route({
       method: 'GET',
+      schema: {
+        tags: ["list"],
+        description: "List all the lists asscoiated with user"
+      },
       url: '/',
       handler: async function lists (request, reply) {
         const { skip, take } = request.query
@@ -17,6 +21,8 @@ module.exports = fp(
       method: 'POST',
       url: '/',
       schema: {
+        tags: ["list"],
+        description: "Create list for user",
         body: fastify.getSchema('schema:list:create:body'),
         response: {
           201: fastify.getSchema('schema:list:create:response')
@@ -38,6 +44,8 @@ module.exports = fp(
       method: 'PUT',
       url: '/:id',
       schema: {
+        tags: ["list"],
+        description: "Update list name.",
         params: fastify.getSchema('schema:list:read:params'),
         body: fastify.getSchema('schema:list:create:body')
       },
@@ -59,6 +67,8 @@ module.exports = fp(
       method: 'DELETE',
       url: '/:id',
       schema: {
+        tags: ["list"],
+        description: "Delete list along with expenses asscoiated with list.",
         params: fastify.getSchema('schema:list:read:params')
       },
       handler: async function deleteList (request, reply) {
@@ -71,7 +81,8 @@ module.exports = fp(
         }
 
         await request.listsDataSource.deleteList(id)
-        reply.code(200)
+        reply.code(204)
+        return { done: true}
       }
     })
 
@@ -79,6 +90,8 @@ module.exports = fp(
       method: 'GET',
       url: '/:id',
       schema: {
+        tags: ["list"],
+        description: "Get list with pagination along with expense total and count",
         params: fastify.getSchema('schema:list:read:params')
       },
       handler: async function getList (request, reply) {
@@ -86,7 +99,7 @@ module.exports = fp(
         const { skip, take } = request.query
         const data = await request.listsDataSource.getList(id, skip, take) ?? []
         const count = await request.listsDataSource.expenseCountList(id) ?? 0
-        const total = await request.listaDataSource.expenseTotal(id) ?? 0
+        const total = await request.listsDataSource.expenseTotal(id) ?? 0
         reply.code(200)
         return {
           data,
@@ -100,10 +113,13 @@ module.exports = fp(
       method: 'GET',
       url: '/:id/total',
       schema: {
+        tags: ["list"],
+        description: "Get total list of expenses using list Id",
         params: fastify.getSchema('schema:list:read:params')
       },
       handler: async function expenseTotal(request, reply) {
-        const total = await request.listaDataSource.expenseTotal(id) ?? 0
+        const id = request.params.id
+        const total = await request.listsDataSource.expenseTotal(id) ?? 0
         reply.code(200)
         return {
           total
