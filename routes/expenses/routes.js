@@ -8,6 +8,8 @@ module.exports = fp(
       method: 'GET',
       url: '/:id',
       schema: {
+        description: "Get individaual expense",
+        tags: ["expense"],
         params: fastify.getSchema('schema:expense:read:params'),
         response: {
           200: fastify.getSchema('schema:expense')
@@ -31,6 +33,8 @@ module.exports = fp(
       method: 'POST',
       url: '/:parentId',
       schema: {
+        description:"Add expense to a list",
+        tags: ['expense'],
         body: fastify.getSchema('schema:expense:create:body'),
         response: {
           201: fastify.getSchema('schema:expense:create:response')
@@ -50,6 +54,8 @@ module.exports = fp(
       method: 'PUT',
       url: '/:id',
       schema: {
+        tags: ["expense"],
+        description: "Update expense",
         body: fastify.getSchema('schema:expense:create:body')
       },
       handler: async function updateExpense (request, reply) {
@@ -66,6 +72,8 @@ module.exports = fp(
       method: 'DELETE',
       url: '/:id',
       schema: {
+        description: "Delete expense",
+        tags: ['expense'],
         params: fastify.getSchema('schema:expense:read:params')
       },
       handler: async function deleteExpense (request, reply) {
@@ -82,6 +90,8 @@ module.exports = fp(
       method: 'PUT',
       url: ':id/complete',
       schema: {
+        description: "Flip the complete",
+        tags: ["expense"],
         params: fastify.getSchema('schema:expense:read:params')
       },
       handler: async function completeExpense (request, reply) {
@@ -103,6 +113,8 @@ module.exports = fp(
       method: 'GET',
       url: ':id/all',
       schema: {
+        tags: ["expense"],
+        description: "Get all expenses",
         params: fastify.getSchema('schema:expense:read:params'),
       },
       handler: async function getAllExpense (request, reply) {

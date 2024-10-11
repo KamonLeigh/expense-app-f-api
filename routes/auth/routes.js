@@ -105,6 +105,7 @@ module.exports = fp(
       url: 'refresh',
       onRequest: fastify.authenticate,
       schema: {
+        tags: ["user"],
         description: "Refresh token.",
         headers: fastify.getSchema('schema:auth:token-header'),
         response: {
