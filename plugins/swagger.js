@@ -12,8 +12,6 @@ module.exports = fp(async function (fastify, opts) {
   })
 
   fastify.register(require('@fastify/swagger-ui'), {
-    routePrefix: '/docs',
+    routePrefix: '/docs'
   })
-
-
 }, { dependencies: ['application-config'] })

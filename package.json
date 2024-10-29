@@ -8,13 +8,21 @@
   },
   "scripts": {
     "pretest": "npm run lint",
-    "test": "tap \"test/**/*.test.js\"",
     "start": "fastify start -l info --options app.js",
-    "dev": "npm run start -- --watch --pretty-logs -debug --inspect",
+    "dev": "dotenv -e  .env.development npm run start -- --watch --pretty-logs -debug --inspect",
+    "dev:migrate:postgres": "dotenv -e .env.development -- npx prisma migrate deploy",
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "db:start": "docker run -d -i --name fastify-postgres -p 5432:5432 -e POSTGRES_PASSWORD=password123 postgres",
-    "db:stop": "docker container stop fastify-postgres"
+    "db:start": "docker run -d -i --name fastify-postgres -p 5432:5432 -e POSTGRES_PASSWORD=password123 -e POSTGRES_DB=mydatabase postgres",
+    "db:stop": "docker container stop fastify-postgres",
+    "test": " tap --before=test/run-before.js test/**/**.test.js --after=test/run-after.js --no-check-coverage",
+    "test:nostop": "dotenv -e  .env.test tap --before=test/before.js test/**/**.test.js --no-check-coverage",
+    "test:coverage": "dotenv -e  .env.test tap --coverage-report=html --before=test/run-before.js test/**/**.test.js --after=test/run-after.js",
+    "prisma:dev": "dotenv -e .env.development -- prisma",
+    "studio:dev": "dotenv -e .env.development -- prisma studio",
+    "seed": "dotenv -e  .env.development npx prisma db seed",
+    "migrate:test": "dotenv -e .env.test -- prisma migrate deploy",
+    "migrate:dev": "dotenv -e .env.development -- prisma migrate dev"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -34,12 +42,17 @@
     "@joggr/fastify-prisma": "^1.2.3",
     "@prisma/client": "^5.13.0",
     "@scalar/fastify-api-reference": "^1.25.30",
+    "env-cmd": "^10.1.0",
     "fastify": "^4.0.0",
     "fastify-cli": "^5.8.0",
     "fastify-plugin": "^4.0.0"
   },
   "devDependencies": {
+    "dockerode": "^4.0.2",
+    "dotenv-cli": "^7.4.2",
+    "form-auto-content": "^3.2.1",
     "prisma": "^5.13.0",
+    "split2": "^4.2.0",
     "standard": "^17.1.0",
     "tap": "^16.1.0"
   }
