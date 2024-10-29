@@ -38,7 +38,8 @@ module.exports = fp(
         body: fastify.getSchema('schema:expense:create:body'),
         response: {
           201: fastify.getSchema('schema:expense:create:response')
-        }
+        },
+        params: fastify.getSchema('schema:expense:read:params')
       },
       handler: async function createExpense (request, reply) {
         const parentId = request.params.parentId
@@ -56,7 +57,8 @@ module.exports = fp(
       schema: {
         tags: ['expense'],
         description: 'Update expense',
-        body: fastify.getSchema('schema:expense:create:body')
+        body: fastify.getSchema('schema:expense:create:body'),
+        params: fastify.getSchema('schema:expense:read:params')
       },
       handler: async function updateExpense (request, reply) {
         const id = request.params.id
