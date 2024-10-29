@@ -12,19 +12,19 @@ module.exports = fp(
         tags: ['expense'],
         params: fastify.getSchema('schema:expense:read:params'),
         response: {
-          200: fastify.getSchema('schema:expense')
+          201: fastify.getSchema('schema:expense')
         }
       },
       handler: async function getExpense (request, reply) {
         const expenseId = request.params.id
         const expense = await request.expensesDataSource.getExpense(expenseId)
 
-        if (!expense) {
+        if (!expense?.expense) {
           reply.code(404)
           return { message: 'expense not found' }
         }
 
-        reply.code(200)
+        reply.code(201)
         return expense
       }
     })
