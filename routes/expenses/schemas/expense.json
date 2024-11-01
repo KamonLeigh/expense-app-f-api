@@ -6,6 +6,9 @@
     "expense": {
       "type": "string"
     },
+    "note": {
+      "type": "string"
+    },
     "authorId": {
       "type": "string"
     },

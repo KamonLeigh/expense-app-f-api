@@ -12,7 +12,7 @@ module.exports = fp(
         tags: ['expense'],
         params: fastify.getSchema('schema:expense:read:params'),
         response: {
-          201: fastify.getSchema('schema:expense')
+          200: fastify.getSchema('schema:expense')
         }
       },
       handler: async function getExpense (request, reply) {
@@ -24,7 +24,7 @@ module.exports = fp(
           return { message: 'expense not found' }
         }
 
-        reply.code(201)
+        reply.code(200)
         return expense
       }
     })
@@ -39,7 +39,7 @@ module.exports = fp(
         response: {
           201: fastify.getSchema('schema:expense:create:response')
         },
-        params: fastify.getSchema('schema:expense:read:params')
+        params: fastify.getSchema('schema:expense:create:params')
       },
       handler: async function createExpense (request, reply) {
         const parentId = request.params.parentId
@@ -83,7 +83,7 @@ module.exports = fp(
 
         await request.expensesDataSource.deleteExpense(id)
         reply.code(204)
-        return { done: true }
+        return { messeage: 'expense deleted' }
       }
     })
 
