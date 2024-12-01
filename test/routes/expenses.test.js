@@ -51,20 +51,22 @@ t.test('create expense', async (t) => {
     method: 'POST',
     url: `/expenses/${createList.json().id}`,
     payload: {
-      note: 'expense 1',
-      description: 'expense description'
+      note: 'expense test 1',
+      description: 'expense test description'
     },
     ...headers(token)
   })
 
   t.equal(createExpense.statusCode, 201)
 
+  const NOTE = 'expense test 1 update'
+  const DESCRIPTION = 'expense test update description'
   const updateFailExpense = await app.inject({
     method: 'PUT',
     url: `/expenses/${createExpense.json().id}`,
     payload: {
-      note: 'expense 1 update',
-      description: 'expense update description'
+      note: NOTE,
+      description: DESCRIPTION
     }
   })
 
@@ -74,8 +76,8 @@ t.test('create expense', async (t) => {
     method: 'PUT',
     url: `/expenses/${createExpense.json().id}`,
     payload: {
-      note: 'expense 1 update',
-      description: 'expense update description'
+      note: NOTE,
+      description: DESCRIPTION
     },
     ...headers(token)
   })
@@ -89,8 +91,8 @@ t.test('create expense', async (t) => {
 
   t.equal(expense.statusCode, 200)
 
-  t.equal(expense.json().note, 'expense 1 update')
-  t.equal(expense.json().description, 'expense update description')
+  t.equal(expense.json().note, NOTE)
+  t.equal(expense.json().description, DESCRIPTION)
 })
 
 t.test('delete expense', async (t) => {
