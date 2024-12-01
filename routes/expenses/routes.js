@@ -89,7 +89,7 @@ module.exports = fp(
 
     fastify.route({
       method: 'PUT',
-      url: ':id/complete',
+      url: '/:id/complete',
       schema: {
         description: 'Flip the complete',
         tags: ['expense'],

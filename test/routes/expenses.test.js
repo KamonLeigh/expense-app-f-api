@@ -90,8 +90,7 @@ t.test('create expense', async (t) => {
   t.equal(expense.statusCode, 200)
 
   t.match(expense.json(), {
-    note: 'expense 1 update',
-    description: 'expense update description'
+    note: 'expense 1 update'
   })
 })
 
@@ -136,4 +135,47 @@ t.test('delete expense', async (t) => {
   })
 
   t.equal(deleteExpense.statusCode, 204)
+})
+
+t.test('complete expense', async (t) => {
+  const { app } = t.context
+  const { token } = t.context.user
+
+  const createList = await app.inject({
+    method: 'POST',
+    url: '/lists',
+    payload: {
+      name: 'list 2'
+    },
+    ...headers(token)
+  })
+
+  t.equal(createList.statusCode, 201)
+
+  const createCompleteExpense = await app.inject({
+    method: 'POST',
+    url: `/expenses/${createList.json().id}`,
+    payload: {
+      note: 'expense 1',
+      description: 'expense description'
+    },
+    ...headers(token)
+  })
+
+  t.equal(createCompleteExpense.statusCode, 201)
+
+  const updateCompleteExpense = await app.inject({
+    method: 'PUT',
+    url: `/expenses/${createCompleteExpense.json().id}/complete`,
+    ...headers(token)
+  })
+  t.equal(updateCompleteExpense.statusCode, 204)
+
+  const completeExpense = await app.inject({
+    url: `/expenses/${createCompleteExpense.json().id}`,
+    ...headers(token)
+  })
+
+  t.equal(completeExpense.statusCode, 200)
+  t.equal(completeExpense.json().completed, true)
 })
