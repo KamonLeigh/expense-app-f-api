@@ -88,6 +88,7 @@ t.test('create expense', async (t) => {
   })
 
   t.equal(expense.statusCode, 200)
+
   t.match(expense.json(), {
     note: 'expense 1 update',
     description: 'expense update description'

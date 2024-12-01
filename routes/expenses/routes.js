@@ -106,7 +106,7 @@ module.exports = fp(
 
         await request.expensesDataSource.completeExpense(id, !expense.completed)
 
-        return { done: true }
+        reply.code(204)
       }
     })
 
