@@ -89,9 +89,8 @@ t.test('create expense', async (t) => {
 
   t.equal(expense.statusCode, 200)
 
-  t.match(expense.json(), {
-    note: 'expense 1 update'
-  })
+  t.equal(expense.json().note, 'expense 1 update')
+  t.equal(expense.json().description, 'expense update description')
 })
 
 t.test('delete expense', async (t) => {
@@ -163,6 +162,13 @@ t.test('complete expense', async (t) => {
   })
 
   t.equal(createCompleteExpense.statusCode, 201)
+
+  const getCompleteExpense = await app.inject({
+    url: `/expenses/${createCompleteExpense.json().id}`,
+    ...headers(token)
+  })
+
+  t.equal(getCompleteExpense.json().completed, false)
 
   const updateCompleteExpense = await app.inject({
     method: 'PUT',
