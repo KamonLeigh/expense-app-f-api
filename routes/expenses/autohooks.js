@@ -9,16 +9,16 @@ module.exports = fp(
     const expenses = fastify.prisma.expense
 
     const select = {
-          expense: true,
-          note: true,
-          description: true,
-          amount: true,
-          type: true,
-          authorId: true,
-          completed: true,
-          createdAt: true,
-          updatedAt: true,
-          parentId: true
+      expense: true,
+      note: true,
+      description: true,
+      amount: true,
+      type: true,
+      authorId: true,
+      completed: true,
+      createdAt: true,
+      updatedAt: true,
+      parentId: true
     }
 
     // fastify.decorate("expenses", expenses);
@@ -66,7 +66,6 @@ module.exports = fp(
           return result
         },
         async deleteExpense (id) {
-
           try {
             const result = await expenses.update({
               where: {

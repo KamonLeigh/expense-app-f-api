@@ -3,7 +3,7 @@
   "$id":"schema:list",
   "additionalProperties": false,
   "properties": {
-    "iistId": {
+    "listId": {
       "type": "string"
     },
     "name": {

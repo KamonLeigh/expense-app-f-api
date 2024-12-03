@@ -33,17 +33,16 @@ module.exports = fp(
           })
           return results
         },
-        async expenseTotal(id) {
+        async expenseTotal (id) {
           const expenseTotal = await fastify.prisma.expense.aggregate({
-           _sum: {
-           amount: true,
-           },
-           where: {
-             parentId: id
-           }
+            _sum: {
+              amount: true
+            },
+            where: {
+              parentId: id
+            }
           })
           return expenseTotal
-
         },
         async expenseCountList (parentId) {
           const expenseCount = await fastify.prisma.expense.count({
@@ -93,7 +92,7 @@ module.exports = fp(
             return result
           } catch (e) {
             if (e instanceof Prisma.PrismaClientKnownRequestError) {
-              e.statusCode = 400
+              e.statusCode = 404
               delete e.code
               e.message = 'List not found'
               throw e
@@ -134,6 +133,7 @@ module.exports = fp(
                 listId: true,
                 authorId: true,
                 updatedAt: true,
+                name: true,
                 expenses: {
                   select: {
                     expense: true,
@@ -149,7 +149,7 @@ module.exports = fp(
                   skip,
                   take,
                   where: {
-                    deletedAt: null,
+                    deletedAt: null
                   }
                 }
               }

@@ -1,7 +1,6 @@
 {
     "type": "object",
     "$id": "schema:dotenv",
-    "required": ["MONGO_URL"],
     "properties": {
         "NODE_ENV": {
             "type": "string",

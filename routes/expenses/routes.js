@@ -8,8 +8,8 @@ module.exports = fp(
       method: 'GET',
       url: '/:id',
       schema: {
-        description: "Get individaual expense",
-        tags: ["expense"],
+        description: 'Get individaual expense',
+        tags: ['expense'],
         params: fastify.getSchema('schema:expense:read:params'),
         response: {
           200: fastify.getSchema('schema:expense')
@@ -19,9 +19,9 @@ module.exports = fp(
         const expenseId = request.params.id
         const expense = await request.expensesDataSource.getExpense(expenseId)
 
-        if (!expense) {
+        if (!expense?.expense) {
           reply.code(404)
-          return { message : "expense not found"}
+          return { message: 'expense not found' }
         }
 
         reply.code(200)
@@ -33,12 +33,13 @@ module.exports = fp(
       method: 'POST',
       url: '/:parentId',
       schema: {
-        description:"Add expense to a list",
+        description: 'Add expense to a list',
         tags: ['expense'],
         body: fastify.getSchema('schema:expense:create:body'),
         response: {
           201: fastify.getSchema('schema:expense:create:response')
-        }
+        },
+        params: fastify.getSchema('schema:expense:create:params')
       },
       handler: async function createExpense (request, reply) {
         const parentId = request.params.parentId
@@ -54,9 +55,10 @@ module.exports = fp(
       method: 'PUT',
       url: '/:id',
       schema: {
-        tags: ["expense"],
-        description: "Update expense",
-        body: fastify.getSchema('schema:expense:create:body')
+        tags: ['expense'],
+        description: 'Update expense',
+        body: fastify.getSchema('schema:expense:create:body'),
+        params: fastify.getSchema('schema:expense:read:params')
       },
       handler: async function updateExpense (request, reply) {
         const id = request.params.id
@@ -72,26 +74,25 @@ module.exports = fp(
       method: 'DELETE',
       url: '/:id',
       schema: {
-        description: "Delete expense",
+        description: 'Delete expense',
         tags: ['expense'],
         params: fastify.getSchema('schema:expense:read:params')
       },
       handler: async function deleteExpense (request, reply) {
         const id = request.params.id
 
-
         await request.expensesDataSource.deleteExpense(id)
         reply.code(204)
-        return { done: true }
+        return { messeage: 'expense deleted' }
       }
     })
 
     fastify.route({
       method: 'PUT',
-      url: ':id/complete',
+      url: '/:id/complete',
       schema: {
-        description: "Flip the complete",
-        tags: ["expense"],
+        description: 'Flip the complete',
+        tags: ['expense'],
         params: fastify.getSchema('schema:expense:read:params')
       },
       handler: async function completeExpense (request, reply) {
@@ -105,7 +106,7 @@ module.exports = fp(
 
         await request.expensesDataSource.completeExpense(id, !expense.completed)
 
-        return { done: true }
+        reply.code(204)
       }
     })
 
@@ -113,9 +114,9 @@ module.exports = fp(
       method: 'GET',
       url: ':id/all',
       schema: {
-        tags: ["expense"],
-        description: "Get all expenses",
-        params: fastify.getSchema('schema:expense:read:params'),
+        tags: ['expense'],
+        description: 'Get all expenses',
+        params: fastify.getSchema('schema:expense:read:params')
       },
       handler: async function getAllExpense (request, reply) {
         const id = request.params.id
@@ -125,8 +126,6 @@ module.exports = fp(
         return data ?? []
       }
     })
-
-
   },
   {
     name: 'expense-routes',

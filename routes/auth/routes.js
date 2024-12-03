@@ -8,7 +8,7 @@ module.exports = fp(
     fastify.route({
       method: 'POST',
       schema: {
-        description:"Register new user.",
+        description: 'Register new user.',
         tags: ['user'],
         body: fastify.getSchema('schema:auth:register')
       },
@@ -51,7 +51,7 @@ module.exports = fp(
       url: '/authenticate',
       schema: {
         tags: ['user'],
-        description: "Authenticate user.",
+        description: 'Authenticate user.',
         body: fastify.getSchema('schema:auth:authenticate'),
         response: {
           200: fastify.getSchema('schema:auth:token')
@@ -90,7 +90,7 @@ module.exports = fp(
       method: 'POST',
       url: '/logout',
       schema: {
-        description: "Logout current user.",
+        description: 'Logout current user.',
         tags: ['user']
       },
       onRequest: fastify.authenticate,
@@ -105,8 +105,8 @@ module.exports = fp(
       url: 'refresh',
       onRequest: fastify.authenticate,
       schema: {
-        tags: ["user"],
-        description: "Refresh token.",
+        tags: ['user'],
+        description: 'Refresh token.',
         headers: fastify.getSchema('schema:auth:token-header'),
         response: {
           200: fastify.getSchema('schema:auth:token')
@@ -120,7 +120,7 @@ module.exports = fp(
       url: '/me',
       onRequest: fastify.authenticate,
       schema: {
-        description: "Get current logged in user.",
+        description: 'Get current logged in user.',
         tags: ['user'],
         headers: fastify.getSchema('schema:auth:token-header'),
         response: {
@@ -136,7 +136,7 @@ module.exports = fp(
       method: 'POST',
       url: '/reset',
       schema: {
-        description: "Request password reset",
+        description: 'Request password reset',
         tags: ['user'],
         body: fastify.getSchema('schema:auth:reset')
       },
@@ -159,24 +159,24 @@ module.exports = fp(
       method: 'POST',
       url: '/password/:token',
       schema: {
-        description: "Reset password",
+        description: 'Reset password',
         tags: ['user'],
         params: fastify.getSchema('schema:auth:token'),
         body: fastify.getSchema('schema:auth:password')
       },
       handler: async function changePassword (request, reply) {
-        const { salt, hash } = await generateHash(request.body.password, user.salt)
+        // const { salt, hash } = await generateHash(request.body.password, user.salt)
 
-        const { user, token } = await request.usersDataSource(request.params.token, salt, hash)
+        // const { user, token } = await request.usersDataSource(request.params.token, salt, hash)
 
-        if (!token || !user) {
-          const err = new Error('Error processing')
-          err.statusCode = 403
-          throw err
-        }
+        // if (!token || !user) {
+        //   const err = new Error('Error processing')
+        //   err.statusCode = 403
+        //   throw err
+        // }
 
         reply.code(200)
-        return { user: user.userId }
+        // return { user: user.userId }
       }
     })
   },

@@ -59,6 +59,7 @@ profile*
 
 #env
 .env
+.env.*
 
 #node modules
 node_modules
