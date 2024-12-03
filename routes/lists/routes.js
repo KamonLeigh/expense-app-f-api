@@ -6,12 +6,13 @@ module.exports = fp(
     fastify.route({
       method: 'GET',
       schema: {
+        querystring: fastify.getSchema('schema:list:query:params'),
         tags: ['list'],
         description: 'List all the lists asscoiated with user'
       },
       url: '/',
       handler: async function lists (request, reply) {
-        let { skip, take } = request.query
+        let { skip, take, search } = request.query
         if (skip) {
           skip = Math.round(Number(skip))
 
@@ -43,7 +44,7 @@ module.exports = fp(
           }
         }
 
-        const data = await request.listsDataSource.listLists(skip, take)
+        const data = await request.listsDataSource.listLists(skip, take, search)
         return { data }
       }
     })
