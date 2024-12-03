@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "$id":"schema:expense:query:params",
+  "additionalProperties": false,
+  "properties": {
+    "search": {
+      "type": "string",
+      "description": "Search Expense",
+      "minLength": 2
+    },
+    "skip": {
+      "type": "integer",
+      "default": 0
+    },
+    "take": {
+      "type": "integer",
+      "default": 15
+    }
+  }
+}
