@@ -20,14 +20,24 @@ module.exports = fp(
 
     fastify.addHook('onRequest', async (request, reply) => {
       request.listsDataSource = {
-        async listLists (skip = 0, take = 50) {
+        async listLists (skip = 0, take = 50, search = '') {
+          const searchObj = {}
+
+          if (search) {
+            searchObj.name = {
+              contains: search,
+              mode: 'insensitive'
+            }
+          }
+
           const authorId = request.user.id
           const results = await lists.findMany({
             skip,
             take,
             where: {
               authorId,
-              deletedAt: null
+              deletedAt: null,
+              ...searchObj
             },
             select
           })
@@ -121,7 +131,7 @@ module.exports = fp(
             throw e
           }
         },
-        async getList (id, skip = 0, take = 15) {
+        async getList (id, skip = 0, take = 15, search) {
           try {
             const data = await lists.findFirst({
               where: {
@@ -149,7 +159,13 @@ module.exports = fp(
                   skip,
                   take,
                   where: {
-                    deletedAt: null
+                    deletedAt: null,
+                    ...(search && {
+                      OR: [
+                        { note: { contains: search, mode: 'insensitive' } },
+                        { description: { contains: search, mode: 'insensitive' } }
+                      ]
+                    })
                   }
                 }
               }

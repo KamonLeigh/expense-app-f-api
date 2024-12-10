@@ -187,3 +187,64 @@ t.test('complete expense', async (t) => {
   t.equal(completeExpense.statusCode, 200)
   t.equal(completeExpense.json().completed, true)
 })
+
+t.test('check pagination in expense', async (t) => {
+  const { app } = t.context
+  const { token } = t.context.user
+
+  const createList = await app.inject({
+    method: 'POST',
+    url: '/lists',
+    payload: {
+      name: 'list expense'
+    },
+    ...headers(token)
+  })
+
+  t.equal(createList.statusCode, 201)
+
+  const expenseList = [
+    {
+      note: 'expense 1',
+      description: 'expense description'
+    },
+    {
+      note: 'expense 2',
+      description: 'expense description 2'
+    },
+    {
+      note: 'expense 3',
+      description: 'expense description 3'
+    }
+  ]
+
+  const results = await Promise.all([app.inject({
+    method: 'POST',
+    url: `/expenses/${createList.json().id}`,
+    payload: expenseList[0],
+    ...headers(token)
+  }), app.inject({
+    method: 'POST',
+    url: `/expenses/${createList.json().id}`,
+    payload: expenseList[1],
+    ...headers(token)
+  }), app.inject({
+    method: 'POST',
+    url: `/expenses/${createList.json().id}`,
+    payload: expenseList[2],
+    ...headers(token)
+  })])
+
+  const statusCodes = results.map(result => result.statusCode)
+
+  t.same(statusCodes, [201, 201, 201])
+
+  const searchQuery = await app.inject({
+    url: `/lists/${createList.json().id}`,
+    query: { search: 'expense 3' },
+    ...headers(token)
+  })
+
+  t.equal(searchQuery.statusCode, 200)
+  t.equal(searchQuery.json().data.expenses[0].description, 'expense description 3')
+})

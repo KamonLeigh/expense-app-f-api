@@ -167,8 +167,16 @@ t.test('test pagination', async (t) => {
     ...headers(token)
   })
 
-  t.equal(paginationTwo.statusCode, 200)
-  t.match(paginationTwo.json(), { data: [{ name: 'list 3' }] })
+  t.equal(paginationTwo.statusCode, 400)
+
+  const search = await app.inject({
+    url: '/lists',
+    query: { search: 'list 4' },
+    ...headers(token)
+  })
+
+  t.equal(search.statusCode, 200)
+  t.match(search.json(), { data: [{ name: 'list 4' }] })
 })
 
 t.test('update list', async (t) => {

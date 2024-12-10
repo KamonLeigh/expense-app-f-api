@@ -6,12 +6,13 @@ module.exports = fp(
     fastify.route({
       method: 'GET',
       schema: {
+        querystring: fastify.getSchema('schema:list:query:params'),
         tags: ['list'],
         description: 'List all the lists asscoiated with user'
       },
       url: '/',
       handler: async function lists (request, reply) {
-        let { skip, take } = request.query
+        let { skip, take, search } = request.query
         if (skip) {
           skip = Math.round(Number(skip))
 
@@ -43,7 +44,7 @@ module.exports = fp(
           }
         }
 
-        const data = await request.listsDataSource.listLists(skip, take)
+        const data = await request.listsDataSource.listLists(skip, take, search)
         return { data }
       }
     })
@@ -119,14 +120,15 @@ module.exports = fp(
       method: 'GET',
       url: '/:id',
       schema: {
+        querystring: fastify.getSchema('schema:expense:query:params'),
         tags: ['list'],
         description: 'Get list with pagination along with expense total and count',
         params: fastify.getSchema('schema:list:read:params')
       },
       handler: async function getList (request, reply) {
         const id = request.params.id
-        const { skip, take } = request.query
-        const data = await request.listsDataSource.getList(id, skip, take) ?? []
+        const { skip, take, search } = request.query
+        const data = await request.listsDataSource.getList(id, skip, take, search) ?? []
         const count = await request.listsDataSource.expenseCountList(id) ?? 0
         const total = await request.listsDataSource.expenseTotal(id) ?? 0
 
