@@ -175,7 +175,6 @@ t.test('test pagination', async (t) => {
     ...headers(token)
   })
 
-  console.log(search.json())
   t.equal(search.statusCode, 200)
   t.match(search.json(), { data: [{ name: 'list 4' }] })
 })
